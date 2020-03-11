@@ -10,21 +10,41 @@ package practicaautomatas;
  * @author andres
  */
 public class NodoDoble {
-    private Object dato;
+    private String dato, siguientePos, anteriorPos;
     private NodoDoble ld;
     private NodoDoble li;
 
-    public NodoDoble(Object dato, NodoDoble ld, NodoDoble li) {
+    public NodoDoble(String dato, String siguientePos, String anteriorPos, NodoDoble ld, NodoDoble li) {
         this.dato = dato;
+        this.siguientePos = siguientePos;
+        this.anteriorPos = anteriorPos;
         this.ld = ld;
         this.li = li;
     }
 
-    public Object getDato() {
+    public String getSiguientePos() {
+        return siguientePos;
+    }
+
+    public void setSiguientePos(String siguientePos) {
+        this.siguientePos = siguientePos;
+    }
+
+    public String getAnteriorPos() {
+        return anteriorPos;
+    }
+
+    public void setAnteriorPos(String anteriorPos) {
+        this.anteriorPos = anteriorPos;
+    }
+    
+    
+
+    public String getDato() {
         return dato;
     }
 
-    public void setDato(Object dato) {
+    public void setDato(String dato) {
         this.dato = dato;
     }
 
