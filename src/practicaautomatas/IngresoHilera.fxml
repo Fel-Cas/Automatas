@@ -16,7 +16,7 @@
       <Button fx:id="cierraParentesis" disable="true" layoutX="366.0" layoutY="107.0" mnemonicParsing="false" onAction="#cierraParentesisAction" prefHeight="52.0" prefWidth="120.0" text=")" />
       <Button fx:id="hileraNula" disable="true" layoutX="521.0" layoutY="107.0" mnemonicParsing="false" onAction="#hileraNulaAction" prefHeight="52.0" prefWidth="120.0" text="*" />
       <Button fx:id="hileraNoNula" disable="true" layoutX="199.0" layoutY="176.0" mnemonicParsing="false" onAction="#hileraNoNulaAction" prefHeight="52.0" prefWidth="120.0" text="+" />
-      <Button fx:id="finSecuencia" layoutX="366.0" layoutY="253.0" mnemonicParsing="false" onAction="#finSecuenciaAction" prefHeight="52.0" prefWidth="120.0" text="Fin de Secuencia" />
+      <Button fx:id="finSecuencia" disable="true" layoutX="366.0" layoutY="253.0" mnemonicParsing="false" onAction="#finSecuenciaAction" prefHeight="52.0" prefWidth="120.0" text="Fin de Secuencia" />
       <Button fx:id="concatenar" disable="true" layoutX="366.0" layoutY="176.0" mnemonicParsing="false" onAction="#concatenarAction" prefHeight="52.0" prefWidth="120.0" text="Concatenar" />
       <Button fx:id="union" disable="true" layoutX="521.0" layoutY="176.0" mnemonicParsing="false" onAction="#unionAction" prefHeight="52.0" prefWidth="120.0" text="Unión" />
       <Label fx:id="escribirHilera" layoutX="8.0" layoutY="368.0" prefHeight="83.0" prefWidth="667.0">

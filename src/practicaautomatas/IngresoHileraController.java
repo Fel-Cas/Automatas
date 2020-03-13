@@ -24,8 +24,8 @@ public class IngresoHileraController {
     @FXML
     private Label escribirHilera;
     @FXML
-    private Button aceptar,cierraParentesis,abreParentesis,hileraNula,hileraNoNula,concatenar,union,finSecuencia;
-    static int j=0, contadorParentesis= 0;
+    private Button aceptar,cierraParentesis,abreParentesis,hileraNula,hileraNoNula,concatenar,union;
+    static int j=0, contadorParentesis= 0,contadorAbreParentesis=0;
     static String cadena= "";
     @FXML
     private Button button;
@@ -33,7 +33,7 @@ public class IngresoHileraController {
     @FXML
     private TextField hilera;
     @FXML
-    private javafx.scene.control.Button soloNumeros,soloLetras;
+    private javafx.scene.control.Button soloNumeros,soloLetras, finSecuencia;
     @FXML
     private void IngresarHileraLetras(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("IngresoHilera.fxml"));
@@ -134,11 +134,7 @@ public class IngresoHileraController {
         concatenar.setDisable(false);
         hileraNoNula.setDisable(false);
         union.setDisable(false);
-        if(contadorParentesis==0){
-            finSecuencia.setDisable(false);
-        }else{
-            finSecuencia.setDisable(true);
-        }
+        finSecuencia.setDisable(true);
         abreParentesis.setDisable(true);
         cierraParentesis.setDisable(true);
     }
@@ -147,13 +143,8 @@ public class IngresoHileraController {
         escribirHilera.setText(cadena);
         concatenar.setDisable(false);
         union.setDisable(false);
-        if(contadorParentesis==0){
-            finSecuencia.setDisable(false);
-        }else{
-            finSecuencia.setDisable(true);
-        }
+        finSecuencia.setDisable(true);
         abreParentesis.setDisable(true);
-        cierraParentesis.setDisable(true);
         hileraNula.setDisable(true);
         hileraNoNula.setDisable(true);
     }
@@ -162,15 +153,10 @@ public class IngresoHileraController {
         escribirHilera.setText(cadena);
         concatenar.setDisable(false);
         union.setDisable(false);
-        if(contadorParentesis==0){
-            finSecuencia.setDisable(false);
-        }else{
-            finSecuencia.setDisable(true);
-        }
         abreParentesis.setDisable(true);
-        cierraParentesis.setDisable(true);
         hileraNula.setDisable(true);
         hileraNoNula.setDisable(true);
+        finSecuencia.setDisable(true);
     }
     public void concatenarAction(ActionEvent event){
         cadena+=".";
@@ -202,8 +188,17 @@ public class IngresoHileraController {
         union.setDisable(true);
         finSecuencia.setDisable(true);
     }
-    public void finSecuenciaAction(ActionEvent event){
+    public void finSecuenciaAction(ActionEvent event) throws IOException{
         cadena+="#";
         escribirHilera.setText(cadena);
+        Parent root = FXMLLoader.load(getClass().getResource("Automata.fxml"));
+        Scene scene = new Scene(root);
+        System.out.println(j);
+        stage.setScene(scene);
+        stage.show();
+        stage.setTitle("Automata");
+        stage.setResizable(false);
+         Stage stage =(Stage) finSecuencia.getScene().getWindow();
+         stage.hide();
     }   
 }

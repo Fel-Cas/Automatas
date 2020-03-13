@@ -7,9 +7,12 @@
 
 <AnchorPane id="AnchorPane" prefHeight="421.0" prefWidth="514.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="practicaautomatas.IngresoHileraController">
     <children>
-        <Button fx:id="soloNumeros" layoutX="161.0" layoutY="120.0" onAction="#IngresarHileraNumeros" prefHeight="84.0" prefWidth="180.0" text="Autómata de números" />
+        <Button fx:id="soloNumeros" layoutX="164.0" layoutY="282.0" onAction="#IngresarHileraNumeros" prefHeight="46.0" prefWidth="187.0" text="Autómata de números">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
-      <Button fx:id="soloLetras" layoutX="161.0" layoutY="247.0" onAction="#IngresarHileraLetras" prefHeight="104.0" prefWidth="180.0" text="Autómata de letras">
+      <Button fx:id="soloLetras" layoutX="167.0" layoutY="220.0" onAction="#IngresarHileraLetras" prefHeight="46.0" prefWidth="180.0" text="Autómata de letras">
          <font>
             <Font size="16.0" />
          </font>
