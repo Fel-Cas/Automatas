@@ -10,16 +10,20 @@ package practicaautomatas;
  * @author andres
  */
 public class NodoDoble {
-    private String dato, siguientePos, anteriorPos;
+    private String dato, siguientePos, anteriorPos, posicion;
     private NodoDoble ld;
     private NodoDoble li;
+    private boolean anulable;
+ 
 
-    public NodoDoble(String dato, String siguientePos, String anteriorPos, NodoDoble ld, NodoDoble li) {
+    public NodoDoble(String dato) {
         this.dato = dato;
-        this.siguientePos = siguientePos;
-        this.anteriorPos = anteriorPos;
-        this.ld = ld;
-        this.li = li;
+        this.siguientePos = null;
+        this.anteriorPos = null;
+        this.ld = null;
+        this.li = null;
+        this.posicion=null;
+        this.anulable=false;
     }
 
     public String getSiguientePos() {
@@ -63,5 +67,15 @@ public class NodoDoble {
     public void setLi(NodoDoble li) {
         this.li = li;
     }
+
+    public String getPosicion() {
+        return posicion;
+    }
+
+    public void setPosicion(String posicion) {
+        this.posicion = posicion;
+    }
+    
+    
     
 }

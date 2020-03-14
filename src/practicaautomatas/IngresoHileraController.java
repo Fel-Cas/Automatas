@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -43,8 +44,9 @@ public class IngresoHileraController {
         stage.setScene(scene);
         stage.show();
         stage.setTitle("Solo Letras");
-         Stage stage =(Stage) soloNumeros.getScene().getWindow();
-         stage.hide();
+        stage.setResizable(false);
+        Stage stage =(Stage) soloNumeros.getScene().getWindow();
+        stage.hide();
     }
     
     @FXML
@@ -57,8 +59,8 @@ public class IngresoHileraController {
         stage.show();
         stage.setTitle("Solo Números");
         stage.setResizable(false);
-         Stage stage =(Stage) soloLetras.getScene().getWindow();
-         stage.hide();
+        Stage stage =(Stage) soloLetras.getScene().getWindow();
+        stage.hide();
     }
     public void aceptarAction (ActionEvent event){
         cadena+=hilera.getText();
@@ -75,7 +77,6 @@ public class IngresoHileraController {
         if(contadorParentesis>0){
            cierraParentesis.setDisable(false);
         }
-        
     }
     public void  hilera (javafx.scene.input.KeyEvent keyEvent) {
         char car = keyEvent.getCharacter().charAt(0);
@@ -89,26 +90,25 @@ public class IngresoHileraController {
                     keyEvent.consume();
                 } 
                     
-            }else {
+        }else{
                 if ((car < '0' || car > '9') ) {
                     keyEvent.consume();
                 }
                 if(hilera.getText().length()>=1){ 
-                    keyEvent.consume();
-                     
+                    keyEvent.consume();                     
                 }              
             }
            
-            if(hilera.getText().length()==0){                          
-                abreParentesis.setDisable(false); 
-            }
-             if(hilera.getText().length()>=0){                          
-                abreParentesis.setDisable(true);
-                 System.out.println("pee");
-            }
-            if(hilera.getText().length()==0){                          
-                abreParentesis.setDisable(false); 
-            }
+        if(hilera.getText().length()==0){                          
+            abreParentesis.setDisable(false); 
+        }
+        if(hilera.getText().length()>=0){                          
+            abreParentesis.setDisable(true);
+            System.out.println("pee");
+        }
+        if(hilera.getText().length()==0){                          
+            abreParentesis.setDisable(false); 
+        }
             
          
     }
@@ -200,5 +200,5 @@ public class IngresoHileraController {
         stage.setResizable(false);
          Stage stage =(Stage) finSecuencia.getScene().getWindow();
          stage.hide();
-    }   
+    }    
 }
