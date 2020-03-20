@@ -10,13 +10,14 @@ package practicaautomatas;
  * @author andres
  */
 public class NodoDoble {
-    private String dato, siguientePos, anteriorPos, posicion;
+    private String  siguientePos, anteriorPos, posicion;
     private NodoDoble ld;
     private NodoDoble li;
     private boolean anulable;
+    private char dato;
  
 
-    public NodoDoble(String dato) {
+    public NodoDoble(char dato) {
         this.dato = dato;
         this.siguientePos = null;
         this.anteriorPos = null;
@@ -26,29 +27,29 @@ public class NodoDoble {
         this.anulable=false;
     }
 
-    public String getSiguientePos() {
+    public String getPrimeraPos() {
         return siguientePos;
     }
 
-    public void setSiguientePos(String siguientePos) {
+    public void setPrimeraPos(String siguientePos) {
         this.siguientePos = siguientePos;
     }
 
-    public String getAnteriorPos() {
+    public String getUltimaPos() {
         return anteriorPos;
     }
 
-    public void setAnteriorPos(String anteriorPos) {
+    public void setUltimaPos(String anteriorPos) {
         this.anteriorPos = anteriorPos;
     }
     
     
 
-    public String getDato() {
+    public char getDato() {
         return dato;
     }
 
-    public void setDato(String dato) {
+    public void setDato(char dato) {
         this.dato = dato;
     }
 
@@ -74,6 +75,14 @@ public class NodoDoble {
 
     public void setPosicion(String posicion) {
         this.posicion = posicion;
+    }
+
+    public boolean getAnulable() {
+        return anulable;
+    }
+
+    public void setAnulable(boolean anulable) {
+        this.anulable = anulable;
     }
     
     
