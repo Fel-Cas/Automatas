@@ -259,6 +259,7 @@ public class ArbolSintactico {
                             return true;
                         }
                     }
+                    i--;
                     break;
                 case'+':
                     i++;
@@ -269,8 +270,12 @@ public class ArbolSintactico {
                         if(aux=='#'){
                             return true;
                         }
+                        
                     }
+                    i--;
                     break;
+                default:
+                    return false;
             }
         }
         return condicion;

@@ -13,6 +13,7 @@ import java.util.Stack;
  */
 public class AutomataFD {
     private String lenguaje="";
+    private Object [][] siguientes;
     public AutomataFD() {
     }
     public void encontrarLenguaje(NodoDoble r){
@@ -114,55 +115,47 @@ public class AutomataFD {
         Stack pila=new Stack();
         nodosHoja(r,pilaHojas);
         nodos(r,pila);
-        Object[][] siguientes=new Object[pilaHojas.size()][3];
+        siguientes =new Object[pilaHojas.size()][3];
         int i=pilaHojas.size()-1;
         String  aux;
         NodoDoble p,q;
         int n=pilaHojas.size();
-        System.out.println(pilaHojas.size());
-        System.out.println(pila.size());
+        //System.out.println(pilaHojas.size());
+        //System.out.println(pila.size());
         for(int k=0;k<pilaHojas.size();k++){
             siguientes[k][2]="";
         }
-        while(!pilaHojas.isEmpty()){
+        while(!pilaHojas.empty()){
             p=(NodoDoble)pilaHojas.pop();
             siguientes[i][0]=p.getPosicion();
             siguientes[i][1]=p.getDato();
             i--;
         }
-        while(!pila.isEmpty()){
+        while(!pila.empty()){
             p=(NodoDoble)pila.pop();
-            System.out.println(p.getDato());
+            //System.out.println(p.getDato());
             if(p.getDato()=='.'){
                 for(int j=0;j<n-1;j++){
                  aux=(String )siguientes[j][0];
                  if(p.getLd()!=null&&p.getLi()!=null){
                      q=p.getLi();
-                     if(q.getUltimaPos().indexOf(aux)!=-1);
-                     
-                     siguientes[j][2]+=p.getLd().getPrimeraPos();
+                     if(q.getUltimaPos().contains(aux)){
+                         siguientes[j][2]+=p.getLd().getPrimeraPos();
+                     }                    
                  }
                 }
-            }else{
+            }else if(p.getDato()=='*'){
                 for(int j=0;j<n-1;j++){
                     aux=(String)siguientes[j][0];
-                    if(p.getUltimaPos().indexOf(aux)!=-1){
-                        System.out.println(p.getLi().getUltimaPos().indexOf(aux));
+                    if(p.getUltimaPos().contains(aux)){
+                        //System.out.println(p.getLi().getUltimaPos().indexOf(aux));
                         siguientes[j][2]+=p.getPrimeraPos();
                     }
                 }
-                
+               
             }
-            
+           
         }
-        
-        for(int j=0;j<n;j++){            
-            for(int k=0;k<3;k++){
-                System.out.print(siguientes[j][k]);
-            }
-            System.out.println(j);
-        }
-        System.out.println("");
     }
     public void nodos(NodoDoble r,Stack pila){
         if(r!=null){
