@@ -13,19 +13,17 @@ import java.util.Stack;
  * @author andres
  */
 public class ArbolSintactico {
-     private NodoDoble raiz;
-    /**
+    private NodoDoble raiz;
+    /*
      * Este es el constructor del árbol binario
      **/
-    public ArbolSintactico() {
+     public ArbolSintactico() {
     }
-
-    /**
-     * Método usado para extraer la raíz del árbol
-     **/
-    public NodoDoble getRaiz() {
-        return raiz;
-    }
+    /*
+     Metodo encargado de inicialzar el arbol con el punto de cocatencion en la raiz y el 
+     simbolo de secuencia nula(#) como hijo derecho. Ademas es el encargado de verificar los casos
+     del resto de la gramatica, si tiene union(|), cocatenacion(.) o solo parentesis.
+     */
     public void crearArbol(String hilera){
         String auxHilera=null;
         char padre,hijo,aux;
@@ -96,9 +94,9 @@ public class ArbolSintactico {
             concatenacion(auxHilera,null,p);
         }else{
             NodoDoble z;
+            char hijo1=' ',hijo2, padre1;
             for(i=i+1;i<auxHilera.length();i++){
             aux=auxHilera.charAt(i);
-            char hijo1,hijo2, padre1;
             switch(aux){
                 case'+':
                     x=new NodoDoble(aux);
@@ -133,6 +131,14 @@ public class ArbolSintactico {
                         concatenacion(hilera2,null,p);
                     }
                     break;
+                    case'.':
+                        x=new NodoDoble(aux);
+                        p.setLi(x);
+                        y=new NodoDoble(hijo1);
+                        x.setLd(y);
+                        p=x;
+                        
+                    break;
                 default:
                     if((auxHilera.length()-i)==3|| auxHilera.length()==3){
                                     hijo1=aux;
@@ -148,16 +154,19 @@ public class ArbolSintactico {
                                     p.setLi(x);
                                     p=x;
                                     
+                                }else if((auxHilera.length()-i)==2){
+                                    padre=aux;
+                                    i++;
+                                    hijo1=auxHilera.charAt(i);
+                                    x=new NodoDoble(padre);
+                                    y=new NodoDoble(hijo1);
+                                    x.setLi(y);
+                                    p.setLi(x);
+                                }else if((auxHilera.length()-i)==1){
+                                    y=new NodoDoble(aux);
+                                    p.setLi(y);
                                 }else{
                                     hijo1=aux;
-                                    i++;
-                                    aux=auxHilera.charAt(i);
-                                    padre1=aux;
-                                    x=new NodoDoble(padre1);
-                                    y=new NodoDoble(hijo1);
-                                    x.setLd(y);
-                                    p.setLi(x);
-                                    p=x;
                                 }
                             }
             
@@ -165,6 +174,9 @@ public class ArbolSintactico {
                     }
         
     }
+    /*
+    Metodo utilizado para ver el recorido inOrden del arbol
+    */
     public String inOrden(NodoDoble r){        
        String hilera="";
         if(r!=null){
@@ -174,6 +186,10 @@ public class ArbolSintactico {
         }
        return hilera;        
     }
+    /*
+    Metodo que retorna verdadero o falso, dependiendo si el simbolo con mayor
+    pioridad es la union. Osea que si en una hilera o la otra
+    */
     public  boolean tieneUnion(String hilera){
         boolean condicion=false;
         int n=hilera.length(),i;
@@ -192,6 +208,7 @@ public class ArbolSintactico {
                     }
                 
                 }
+                i--;
             }
             if(aux=='|'){
                 condicion=true;
@@ -199,6 +216,10 @@ public class ArbolSintactico {
         }
         return condicion;
     }
+    /*
+    Metodo encargado de devolver la posicion donde se encuentra la union con 
+    mayor prioridad
+    */
     public int posicionUnion(String hilera){
         int pos=0;
         int n=hilera.length(),i;
@@ -225,6 +246,10 @@ public class ArbolSintactico {
         }
         return pos;
     }
+    /*
+    Metodo que retorna verdadero o falso, dependiendo si el lenguaje entrado esta entre
+    parentesis.
+    */
     public boolean soloParentesis(String hilera){
         boolean condicion=false;
         int contador=0;
@@ -258,6 +283,7 @@ public class ArbolSintactico {
                         if(aux=='#'){
                             return true;
                         }
+                        
                     }
                     i--;
                     break;
@@ -280,6 +306,11 @@ public class ArbolSintactico {
         }
         return condicion;
     }
+    /*
+    Metodo encargado de separar en dos partes la hilera, una parte desde el inicio hasta 
+   una posicion antes de la union y otra una posicion despues hasta el final de la hilera.
+    pone a la union como padre y le da el trtamiento correspondiente a las otras dos hileras.
+    */
     public void dosHileras(NodoDoble padre,String auxHilera){
         NodoDoble x,y,z,w,padreU,pad;
         int pos=posicionUnion(auxHilera);
@@ -298,7 +329,7 @@ public class ArbolSintactico {
         padreU=pad;
         int contador=0,j=0;
         String parte;
-        char aux,padre1,hijo1,hijo2;
+        char aux,padre1=' ',hijo1=' ',hijo2=' ';
         while(!pila.empty()){
             parte=(String)pila.pop();
             pad=padreU;
@@ -309,7 +340,7 @@ public class ArbolSintactico {
                 dosHileras(pad,parte);
                 
             }else if(tieneConcatenacion(copia)){
-                concatenacion(parte,null,pad);
+                concatenacion(parte,padre,pad);
                  
             }else{
                 
@@ -362,14 +393,22 @@ public class ArbolSintactico {
                                     }else{
                                         concatenacionDosHileras(contador,padreU,pad,hilera2);
                                     }
-                                    
-                                    
+                                                                       
                             break;
-                            default:
-                                if(parte.length()==1){
+                            case'.':
+                                if(pad==padreU){
                                     x=new NodoDoble(aux);
                                     pad.setLd(x);
-                                }else if((parte.length()-j)==3|| parte.length()==3){
+                                }else{
+                                    x=new NodoDoble(aux);
+                                    pad.setLi(x);
+                                } 
+                                y=new NodoDoble(hijo1);
+                                x.setLd(y);
+                                pad=x;
+                            break;
+                            default:
+                                if((parte.length()-j)==3|| parte.length()==3){
                                     hijo1=aux;
                                     j++;
                                     padre1=parte.charAt(j);
@@ -381,27 +420,32 @@ public class ArbolSintactico {
                                     x.setLd(y);
                                     x.setLi(z);
                                     if(pad==padreU){
+                                        x=new NodoDoble(aux);
                                         pad.setLd(x);
-                                        pad=x;
                                     }else{
                                         pad.setLi(x);
                                         pad=x;
                                     } 
-                                }else{
-                                    hijo1=aux;
-                                    j++;
-                                    aux=parte.charAt(j);
+                                    
+                                }else if((parte.length()-j)==2||parte.length()==2){
                                     padre1=aux;
+                                    j++;
+                                    hijo1=parte.charAt(j);
                                     x=new NodoDoble(padre1);
                                     y=new NodoDoble(hijo1);
-                                    x.setLd(y);
+                                    x.setLi(y);
                                     if(pad==padreU){
                                         pad.setLd(x);
                                         pad=x;
                                     }else{
                                         pad.setLi(x);
                                         pad=x;
-                                    }    
+                                    } 
+                                }else if((parte.length()-j)==1||parte.length()==1){
+                                    y=new NodoDoble(aux);
+                                    pad.setLd(y);
+                                }else{
+                                    hijo1=aux;
                                 }
                         }
                      }
@@ -444,11 +488,15 @@ public class ArbolSintactico {
                                 }
                                 
                             break;
+                            case'.':
+                                x=new NodoDoble(aux);
+                                pad.setLi(x);
+                                y=new NodoDoble(hijo1);
+                                x.setLd(y);
+                                pad=x;
+                            break;
                             default:
-                                if(parte.length()==1){
-                                    x=new NodoDoble(aux);
-                                    pad.setLi(x);
-                                }else  if((parte.length()-j)==3|| parte.length()==3){
+                                if((parte.length()-j)==3|| parte.length()==3){
                                     hijo1=aux;
                                     j++;
                                     padre1=parte.charAt(j);
@@ -461,18 +509,21 @@ public class ArbolSintactico {
                                     x.setLi(z);
                                     pad.setLi(x);
                                     pad=x;
-                                   
-                                }else{
-                                    hijo1=aux;
-                                    j++;
-                                    aux=parte.charAt(j);
+                                    
+                                }else if((parte.length()-j)==2||parte.length()==2){
                                     padre1=aux;
+                                    j++;
+                                    hijo1=parte.charAt(j);
                                     x=new NodoDoble(padre1);
                                     y=new NodoDoble(hijo1);
-                                    x.setLd(y);
+                                    x.setLi(y);
                                     pad.setLi(x);
                                     pad=x;
-                                        
+                                }else if((parte.length()-j)==1||parte.length()==1){
+                                    y=new NodoDoble(aux);
+                                    pad.setLi(y);
+                                }else{
+                                    hijo1=aux;
                                 }
                         }
                      }
@@ -481,41 +532,53 @@ public class ArbolSintactico {
                 
         }
     }
+    /*
+    Metodo encargado de tratar una parte de caracteres concatenados que aparecen dentro de un parentesis
+    */
     public void concatenacionDosHileras(int contador,NodoDoble padre, NodoDoble pad, String hilera2){
         char aux;
         NodoDoble x,y,z;
-        char padre1,hijo1,hijo2;
+        char padre1=' ',hijo1=' ',hijo2=' ';
         if(contador==1){
             for(int j=0;j<hilera2.length();j++){
                 aux=hilera2.charAt(j);
                 switch(aux){
-                    case'*':
-                        if(pad==padre){
-                            x=new NodoDoble(aux);
-                            pad.setLd(x);
-                            pad=x;
-                        }else{
-                            x=new NodoDoble(aux);
-                            pad.setLi(x);
-                            pad=x;
-                        }                          
-                             break;
-                        case'+':
-                            if(pad==padre){
-                                x=new NodoDoble(aux);
-                                pad.setLd(x);
-                                pad=x;
-                            }else{
-                                x=new NodoDoble(aux);
-                                pad.setLi(x);
-                                pad=x;
-                            }  
-                            break;
-                        default:
-                                if(hilera2.length()==1){
+                            case'*':
+                                if(pad==padre){
                                     x=new NodoDoble(aux);
                                     pad.setLd(x);
-                                }else if((hilera2.length()-j)==3|| hilera2.length()==3){
+                                    pad=x;
+                                }else{
+                                    x=new NodoDoble(aux);
+                                    pad.setLi(x);
+                                    pad=x;
+                                }                          
+                                break;
+                            case'+':
+                                if(pad==padre){
+                                    x=new NodoDoble(aux);
+                                    pad.setLd(x);
+                                    pad=x;
+                                }else{
+                                    x=new NodoDoble(aux);
+                                    pad.setLi(x);
+                                    pad=x;
+                                }  
+                                break;
+                            case'.':
+                                if(pad==padre){
+                                    x=new NodoDoble(aux);
+                                    pad.setLd(x);
+                                }else{
+                                    x=new NodoDoble(aux);
+                                    pad.setLi(x);
+                                } 
+                                y=new NodoDoble(hijo1);
+                                x.setLd(y);
+                                pad=x;
+                            break;
+                            default:
+                                if((hilera2.length()-j)==3|| hilera2.length()==3){
                                     hijo1=aux;
                                     j++;
                                     padre1=hilera2.charAt(j);
@@ -526,6 +589,21 @@ public class ArbolSintactico {
                                     z=new NodoDoble(hijo2);
                                     x.setLd(y);
                                     x.setLi(z);
+                                    if(pad==padre){;
+                                        pad.setLd(x);
+                                        pad=x;
+                                    }else{
+                                        pad.setLi(x);
+                                        pad=x;
+                                    } 
+                                    
+                                }else if((hilera2.length()-j)==2||hilera2.length()==2){
+                                    padre1=aux;
+                                    j++;
+                                    hijo1=hilera2.charAt(j);
+                                    x=new NodoDoble(padre1);
+                                    y=new NodoDoble(hijo1);
+                                    x.setLi(y);
                                     if(pad==padre){
                                         pad.setLd(x);
                                         pad=x;
@@ -533,44 +611,38 @@ public class ArbolSintactico {
                                         pad.setLi(x);
                                         pad=x;
                                     } 
+                                }else if((hilera2.length()-j)==1||hilera2.length()==1){
+                                    y=new NodoDoble(aux);
+                                    pad.setLd(y);
                                 }else{
                                     hijo1=aux;
-                                    j++;
-                                    aux=hilera2.charAt(j);
-                                    padre1=aux;
-                                    x=new NodoDoble(padre1);
-                                    y=new NodoDoble(hijo1);
-                                    x.setLd(y);
-                                    if(pad==padre){
-                                        pad.setLd(x);
-                                        pad=x;
-                                    }else{
-                                        pad.setLi(x);
-                                        pad=x;
-                                    }    
                                 }
-                }
+                        }
             }
         }else{
             for(int j=0;j<hilera2.length();j++){
                 aux=hilera2.charAt(j);
                 switch(aux){
-                    case'*':
-                            x=new NodoDoble(aux);
-                            pad.setLi(x);
-                            pad=x;
-                                                  
-                             break;
-                        case'+':
-                                x=new NodoDoble(aux);
-                                pad.setLi(x);
-                                pad=x;
-                            break;
-                        default:
-                                if(hilera2.length()==1){
+                            case'*':
                                     x=new NodoDoble(aux);
                                     pad.setLi(x);
-                                }else if((hilera2.length()-j)==3|| hilera2.length()==3){
+                                    pad=x;
+                                                          
+                                break;
+                            case'+':
+                                    x=new NodoDoble(aux);
+                                    pad.setLi(x);
+                                    pad=x;
+                                break;
+                            case'.':
+                                x=new NodoDoble(aux);
+                                pad.setLi(x);
+                                y=new NodoDoble(hijo1);
+                                x.setLd(y);
+                                pad=x;
+                            break;
+                            default:
+                                if((hilera2.length()-j)==3|| hilera2.length()==3){
                                     hijo1=aux;
                                     j++;
                                     padre1=hilera2.charAt(j);
@@ -582,25 +654,34 @@ public class ArbolSintactico {
                                     x.setLd(y);
                                     x.setLi(z);
                                     pad.setLi(x);
-                                    pad=x;                                   
-                                }else{
-                                    hijo1=aux;
-                                    j++;
-                                    aux=hilera2.charAt(j);
+                                    pad=x;
+                                    
+                                }else if((hilera2.length()-j)==2||hilera2.length()==2){
                                     padre1=aux;
+                                    j++;
+                                    hijo1=hilera2.charAt(j);
                                     x=new NodoDoble(padre1);
                                     y=new NodoDoble(hijo1);
-                                    x.setLd(y);
+                                    x.setLi(y);
                                     pad.setLi(x);
                                     pad=x;
-                                       
+                                }else if((hilera2.length()-j)==1||hilera2.length()==1){
+                                    y=new NodoDoble(aux);
+                                    pad.setLi(y);
+                                }else{
+                                    hijo1=aux;
                                 }
-                }
+                        }
             }
             
         }
         
     }
+    /*
+    Metodo encargado de separar en dos partes la hilera, una parte desde el inicio hasta 
+   una posicion antes de la concatenacion y otra una posicion despues hasta el final de la hilera.
+    pone a la concatenacion como padre y le da el trtamiento correspondiente a las otras dos hileras.
+    */
     public void concatenacion(String auxHilera,NodoDoble pad,NodoDoble padre){
         NodoDoble x,y,z,padreC;
         padreC=pad;
@@ -624,7 +705,7 @@ public class ArbolSintactico {
         padreC=pad;
         int contador=0,j=0;
         String parte;
-        char aux,padre1,hijo1,hijo2;
+        char aux,padre1=' ',hijo1=' ',hijo2=' ';
         while(!pila.isEmpty()){
             parte=(String)pila.pop();
             pad=padreC;
@@ -684,15 +765,26 @@ public class ArbolSintactico {
                                     copia=n.reverse().toString();
                                     if(tieneUnion(copia)){
                                         dosHileras(pad,hilera2);
+                                        
                                     }else{
                                         concatenacionDosHileras(contador,padreC,pad,hilera2);
                                     }
+                                                                       
                             break;
-                            default:
-                                if(parte.length()==1){
+                            case'.':
+                                if(pad==padreC){
                                     x=new NodoDoble(aux);
                                     pad.setLd(x);
-                                }else if((parte.length()-j)==3|| parte.length()==3){
+                                }else{
+                                    x=new NodoDoble(aux);
+                                    pad.setLi(x);
+                                } 
+                                y=new NodoDoble(hijo1);
+                                x.setLd(y);
+                                pad=x;
+                            break;
+                            default:
+                                if((parte.length()-j)==3|| parte.length()==3){
                                     hijo1=aux;
                                     j++;
                                     padre1=parte.charAt(j);
@@ -703,35 +795,40 @@ public class ArbolSintactico {
                                     z=new NodoDoble(hijo2);
                                     x.setLd(y);
                                     x.setLi(z);
-                                    if(pad==padre){
+                                    if(pad==padreC){
                                         pad.setLd(x);
                                         pad=x;
                                     }else{
                                         pad.setLi(x);
                                         pad=x;
                                     } 
-                                }else{
-                                    hijo1=aux;
-                                    j++;
-                                    aux=parte.charAt(j);
+                                    
+                                }else if((parte.length()-j)==2||parte.length()==2){
                                     padre1=aux;
+                                    j++;
+                                    hijo1=parte.charAt(j);
                                     x=new NodoDoble(padre1);
                                     y=new NodoDoble(hijo1);
-                                    x.setLd(y);
-                                    if(pad==padre){
+                                    x.setLi(y);
+                                    if(pad==padreC){
+                                        x=new NodoDoble(aux);
                                         pad.setLd(x);
-                                        pad=x;
                                     }else{
                                         pad.setLi(x);
                                         pad=x;
-                                    }    
+                                    } 
+                                }else if((parte.length()-j)==1||parte.length()==1){
+                                    y=new NodoDoble(aux);
+                                    pad.setLd(y);
+                                }else{
+                                    hijo1=aux;
                                 }
                         }
                      }
                 }else{
                     for(j=0;j<parte.length();j++){
                         aux=parte.charAt(j);
-                        switch(aux){
+                         switch(aux){
                             case'*':
                                     x=new NodoDoble(aux);
                                     pad.setLi(x);
@@ -767,11 +864,15 @@ public class ArbolSintactico {
                                 }
                                 
                             break;
+                            case'.':
+                                x=new NodoDoble(aux);
+                                pad.setLi(x);
+                                y=new NodoDoble(hijo1);
+                                x.setLd(y);
+                                pad=x;
+                            break;
                             default:
-                                if(parte.length()==1){
-                                    x=new NodoDoble(aux);
-                                    pad.setLi(x);
-                                }else  if((parte.length()-j)==3|| parte.length()==3){
+                                if((parte.length()-j)==3|| parte.length()==3){
                                     hijo1=aux;
                                     j++;
                                     padre1=parte.charAt(j);
@@ -784,18 +885,21 @@ public class ArbolSintactico {
                                     x.setLi(z);
                                     pad.setLi(x);
                                     pad=x;
-                                   
-                                }else{
-                                    hijo1=aux;
-                                    j++;
-                                    aux=parte.charAt(j);
+                                    
+                                }else if((parte.length()-j)==2||parte.length()==2){
                                     padre1=aux;
+                                    j++;
+                                    hijo1=parte.charAt(j);
                                     x=new NodoDoble(padre1);
                                     y=new NodoDoble(hijo1);
-                                    x.setLd(y);
+                                    x.setLi(y);
                                     pad.setLi(x);
                                     pad=x;
-                                        
+                                }else if((parte.length()-j)==1||parte.length()==1){
+                                    y=new NodoDoble(aux);
+                                    pad.setLi(y);
+                                }else{
+                                    hijo1=aux;
                                 }
                         }
                      }
@@ -803,6 +907,10 @@ public class ArbolSintactico {
             }
         }
     }
+     /*
+    Metodo que retorna verdadero o falso, dependiendo si el simbolo con mayor
+    pioridad es la concatenacion.
+    */
     public boolean tieneConcatenacion(String hilera){
         int n= hilera.length();
         boolean condicion= false;
@@ -854,6 +962,10 @@ public class ArbolSintactico {
         }
         return condicion;
     }
+    /*
+    Metodo encargado de devolver la posicion donde se encuentra la concatenacion con 
+    mayor prioridad
+    */
     public int posicionConcatenacion(String hilera){
         int pos=0;
         int n=hilera.length(),i;
@@ -888,8 +1000,9 @@ public class ArbolSintactico {
         }
         return pos;
     }
-    public void dosHilerasConcatenacion(NodoDoble padre, String hilera){
-        
+    
+    public NodoDoble getRaiz() {
+        return raiz;
     }
     public void setRaiz(NodoDoble raiz) {
         this.raiz = raiz;

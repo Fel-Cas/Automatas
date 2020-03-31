@@ -13,8 +13,9 @@ import java.util.Stack;
  */
 public class AutomataFD {
     private String lenguaje="";
-    private Object [][] siguientes;
+    private Object[][]siguientes;
     public AutomataFD() {
+        
     }
     public void encontrarLenguaje(NodoDoble r){
         Stack pila=new Stack();
@@ -77,8 +78,7 @@ public class AutomataFD {
         
     }
     public void calcularPosiciones(NodoDoble r){
-        if(r!=null){
-            
+        if(r!=null){            
             calcularPosiciones(r.getLi());
             calcularPosiciones(r.getLd());
             switch(r.getDato()){
@@ -111,7 +111,7 @@ public class AutomataFD {
         }
     }
     public void follows(NodoDoble r){
-        Stack pilaHojas=new Stack();
+         Stack pilaHojas=new Stack();
         Stack pila=new Stack();
         nodosHoja(r,pilaHojas);
         nodos(r,pila);
@@ -155,6 +155,13 @@ public class AutomataFD {
                
             }
            
+        }
+       
+        for(int j=0;j<n;j++){            
+            for(int k=0;k<3;k++){
+                System.out.print(siguientes[j][k]+" ");
+            }
+            System.out.println("");
         }
     }
     public void nodos(NodoDoble r,Stack pila){

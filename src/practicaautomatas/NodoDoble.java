@@ -16,7 +16,9 @@ public class NodoDoble {
     private boolean anulable;
     private char dato;
  
-
+    /*
+    Metodo constructor
+    */
     public NodoDoble(char dato) {
         this.dato = dato;
         this.siguientePos = null;
