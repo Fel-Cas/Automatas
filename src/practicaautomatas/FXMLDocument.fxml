@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="421.0" prefWidth="514.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="practicaautomatas.IngresoHileraController">
+<AnchorPane id="AnchorPane" prefHeight="421.0" prefWidth="514.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="practicaautomatas.IngresoHileraController">
     <children>
         <Button fx:id="soloNumeros" layoutX="164.0" layoutY="282.0" onAction="#IngresarHileraNumeros" prefHeight="46.0" prefWidth="187.0" text="Autómata de números">
          <font>
@@ -17,5 +17,10 @@
             <Font size="16.0" />
          </font>
       </Button>
+      <Label layoutX="114.0" layoutY="83.0" text="Expresion Regular a AutomtaFD">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

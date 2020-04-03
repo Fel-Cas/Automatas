@@ -13,10 +13,13 @@ import java.util.Stack;
  * @author andres
  */
 public class ArbolSintactico {
-    private NodoDoble raiz;
-    /*
+      private NodoDoble raiz;
+    /**
      * Este es el constructor del árbol binario
      **/
+     /*
+      Metodo constructor
+      */
      public ArbolSintactico() {
     }
     /*
@@ -79,19 +82,19 @@ public class ArbolSintactico {
                     StringBuilder n=new StringBuilder(hilera2);
                     String copia=n.reverse().toString();
                     if(tieneUnion(copia)){ 
-                        dosHileras(p,hilera2);
+                        dosHileras(p,hilera2,2);
                 
                     }else if(tieneConcatenacion(copia)){
-                        concatenacion(hilera2,null,p);
+                        concatenacion(hilera2,p,2);
                     }
                     break;
             }
             
            }
         }else if(tieneUnion(hilera)){
-            dosHileras(p,auxHilera); 
+            dosHileras(p,auxHilera,2); 
         }else if(tieneConcatenacion(hilera)){
-            concatenacion(auxHilera,null,p);
+            concatenacion(auxHilera,p,2);
         }else{
             NodoDoble z;
             char hijo1=' ',hijo2, padre1;
@@ -125,10 +128,10 @@ public class ArbolSintactico {
                     StringBuilder n=new StringBuilder(hilera2);
                     String copia=n.reverse().toString();
                     if(tieneUnion(copia)){ 
-                        dosHileras(p,hilera2);
+                        dosHileras(p,hilera2,2);
                 
                     }else if(tieneConcatenacion(copia)){
-                        concatenacion(hilera2,null,p);
+                        concatenacion(hilera2,p,2);
                     }
                     break;
                     case'.':
@@ -273,6 +276,7 @@ public class ArbolSintactico {
                             }
                         }
                     }
+                   
                     break;
                 case'*':
                     i++;
@@ -300,6 +304,12 @@ public class ArbolSintactico {
                     }
                     i--;
                     break;
+                case'.':
+                    i++;
+                    if(hilera.charAt(i)=='#'){
+                        return true;
+                    }
+                    break;
                 default:
                     return false;
             }
@@ -311,7 +321,7 @@ public class ArbolSintactico {
    una posicion antes de la union y otra una posicion despues hasta el final de la hilera.
     pone a la union como padre y le da el trtamiento correspondiente a las otras dos hileras.
     */
-    public void dosHileras(NodoDoble padre,String auxHilera){
+    public void dosHileras(NodoDoble padre,String auxHilera,int desicion){
         NodoDoble x,y,z,w,padreU,pad;
         int pos=posicionUnion(auxHilera);
         Stack pila=new Stack();
@@ -322,10 +332,13 @@ public class ArbolSintactico {
             pila.push(auxHilera.substring(0,pos));
         }
         x=new NodoDoble(auxHilera.charAt(pos));
-        
+        if(desicion==1){
+            padre.setLd(x);
+            pad=x;
+        }else{
             padre.setLi(x);
             pad=x;
-        
+        }
         padreU=pad;
         int contador=0,j=0;
         String parte;
@@ -337,10 +350,10 @@ public class ArbolSintactico {
             StringBuilder n=new StringBuilder(parte);
             String copia=n.reverse().toString();
             if(tieneUnion(copia)){ 
-                dosHileras(pad,parte);
+                dosHileras(pad,parte,contador);
                 
             }else if(tieneConcatenacion(copia)){
-                concatenacion(parte,padre,pad);
+                concatenacion(parte,pad,contador);
                  
             }else{
                 
@@ -357,7 +370,10 @@ public class ArbolSintactico {
                                     x=new NodoDoble(aux);
                                     pad.setLi(x);
                                     pad=x;
-                                }                          
+                                }
+                                if(parte.charAt(j+1)==')'){
+                                    contador=2;
+                                }
                                 break;
                             case'+':
                                 if(pad==padreU){
@@ -368,7 +384,10 @@ public class ArbolSintactico {
                                     x=new NodoDoble(aux);
                                     pad.setLi(x);
                                     pad=x;
-                                }  
+                                }
+                                if(parte.charAt(j+1)==')'){
+                                    contador=2;
+                                }
                                 break;
                             case')':
                                 String hilera2="";
@@ -388,11 +407,12 @@ public class ArbolSintactico {
                                     n=new StringBuilder(hilera2);
                                     copia=n.reverse().toString();
                                     if(tieneUnion(copia)){
-                                        dosHileras(pad,hilera2);
+                                        dosHileras(pad,hilera2,contador);
                                         
                                     }else{
                                         concatenacionDosHileras(contador,padreU,pad,hilera2);
                                     }
+                                    contador=1;
                                                                        
                             break;
                             case'.':
@@ -420,8 +440,9 @@ public class ArbolSintactico {
                                     x.setLd(y);
                                     x.setLi(z);
                                     if(pad==padreU){
-                                        x=new NodoDoble(aux);
+                                        
                                         pad.setLd(x);
+                                        pad=x;
                                     }else{
                                         pad.setLi(x);
                                         pad=x;
@@ -482,11 +503,10 @@ public class ArbolSintactico {
                                 n=new StringBuilder(hilera2);
                                 copia=n.reverse().toString();
                                 if(tieneUnion(copia)){
-                                        dosHileras(pad,hilera2);
+                                        dosHileras(pad,hilera2,contador);
                                     }else{
                                         concatenacionDosHileras(contador,padreU,pad,hilera2);
                                 }
-                                
                             break;
                             case'.':
                                 x=new NodoDoble(aux);
@@ -682,8 +702,9 @@ public class ArbolSintactico {
    una posicion antes de la concatenacion y otra una posicion despues hasta el final de la hilera.
     pone a la concatenacion como padre y le da el trtamiento correspondiente a las otras dos hileras.
     */
-    public void concatenacion(String auxHilera,NodoDoble pad,NodoDoble padre){
-        NodoDoble x,y,z,padreC;
+    public void concatenacion(String auxHilera,NodoDoble padre,int liga){
+        NodoDoble x,y,z,padreC,pad;
+        pad=padre;
         padreC=pad;
         int pos=posicionConcatenacion(auxHilera);
         Stack pila=new Stack();
@@ -694,7 +715,7 @@ public class ArbolSintactico {
             pila.push(auxHilera.substring(0,pos));
         }
         x=new NodoDoble(auxHilera.charAt(pos));
-        if(padre==pad){
+        if(liga==1){
             padre.setLd(x);
             pad=x;
         }else{
@@ -713,10 +734,10 @@ public class ArbolSintactico {
             StringBuilder n=new StringBuilder(parte);
             String copia=n.reverse().toString();
             if(tieneUnion(copia)){ 
-                dosHileras(pad,parte);
+                dosHileras(pad,parte,contador);
                 
             }else if(tieneConcatenacion(copia)){
-                concatenacion(parte,pad,padreC);
+                concatenacion(parte,pad,contador);
                  
             }else{
                 
@@ -733,7 +754,10 @@ public class ArbolSintactico {
                                     x=new NodoDoble(aux);
                                     pad.setLi(x);
                                     pad=x;
-                                }                          
+                                }
+                                if(parte.charAt(j+1)==')'){
+                                    contador=2;
+                                }
                                 break;
                             case'+':
                                 if(pad==padreC){
@@ -744,7 +768,10 @@ public class ArbolSintactico {
                                     x=new NodoDoble(aux);
                                     pad.setLi(x);
                                     pad=x;
-                                }  
+                                }
+                                if(parte.charAt(j+1)==')'){
+                                    contador=2;
+                                }
                                 break;
                             case')':
                                 String hilera2="";
@@ -764,12 +791,11 @@ public class ArbolSintactico {
                                     n=new StringBuilder(hilera2);
                                     copia=n.reverse().toString();
                                     if(tieneUnion(copia)){
-                                        dosHileras(pad,hilera2);
-                                        
+                                        dosHileras(pad,hilera2,contador);
                                     }else{
                                         concatenacionDosHileras(contador,padreC,pad,hilera2);
                                     }
-                                                                       
+                                    contador=1;                                   
                             break;
                             case'.':
                                 if(pad==padreC){
@@ -858,7 +884,7 @@ public class ArbolSintactico {
                                 n=new StringBuilder(hilera2);
                                 copia=n.reverse().toString();
                                 if(tieneUnion(copia)){
-                                        dosHileras(pad,hilera2);
+                                        dosHileras(pad,hilera2,contador);
                                     }else{
                                         concatenacionDosHileras(contador,padreC,pad,hilera2);
                                 }
@@ -1007,4 +1033,5 @@ public class ArbolSintactico {
     public void setRaiz(NodoDoble raiz) {
         this.raiz = raiz;
     }
+    
 }

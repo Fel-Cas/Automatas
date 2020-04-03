@@ -22,6 +22,7 @@ import javafx.stage.Stage;
  * @author jhon.quitian
  */
 public class IngresoHileraController {
+    //Varibles Utilizadas en  la entrada de la Expresion Regular
     @FXML
     private Label escribirHilera;
     @FXML
@@ -35,6 +36,14 @@ public class IngresoHileraController {
     private TextField hilera;
     @FXML
     private javafx.scene.control.Button soloNumeros,soloLetras, finSecuencia;
+    //Variables Utilizadas para mostrar el Automata y verificar hileras.
+    @FXML
+    private TextField hileraAReconocer;
+    @FXML
+    private Button mostrarAutomata,reconocerHilera;
+    static AutomataFD automata;
+    static ArbolSintactico arbol;
+    //Metodos de entrada de la Expresion Regular
     @FXML
     private void IngresarHileraLetras(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("IngresoHilera.fxml"));
@@ -48,7 +57,6 @@ public class IngresoHileraController {
         Stage stage =(Stage) soloNumeros.getScene().getWindow();
         stage.hide();
     }
-    
     @FXML
     private void IngresarHileraNumeros(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("IngresoHilera.fxml"));
@@ -201,4 +209,26 @@ public class IngresoHileraController {
          Stage stage =(Stage) finSecuencia.getScene().getWindow();
          stage.hide();
     }    
+    //Metodos Utilizados para el reconocimiento de la hilera
+    public void reconocerHileraAction(ActionEvent event){
+        System.out.println(hileraAReconocer.getText());
+        hileraAReconocer.setText(" ");
+    }
+    public void mostrarAutomataAction(ActionEvent event){
+        reconocerHilera.setDisable(false);
+    }
+    public void  hileraReconocer (javafx.scene.input.KeyEvent keyEvent) {
+        char car = keyEvent.getCharacter().charAt(0);
+        
+        if(j==1){
+            if ((car < 'a' || car > 'z') && (car < 'A' || car > 'Z') ) {
+                keyEvent.consume();
+                }   
+        }else{
+                if ((car < '0' || car > '9') ) {
+                    keyEvent.consume();
+                }             
+            }
+                   
+    }
 }
