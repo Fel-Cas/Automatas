@@ -13,10 +13,7 @@ import java.util.Stack;
  * @author andres
  */
 public class ArbolSintactico {
-      private NodoDoble raiz;
-    /**
-     * Este es el constructor del árbol binario
-     **/
+     private NodoDoble raiz;
      /*
       Metodo constructor
       */
@@ -86,6 +83,8 @@ public class ArbolSintactico {
                 
                     }else if(tieneConcatenacion(copia)){
                         concatenacion(hilera2,p,2);
+                    }else{
+                        soloConcatenacion(hilera2,p);
                     }
                     break;
             }
@@ -96,9 +95,18 @@ public class ArbolSintactico {
         }else if(tieneConcatenacion(hilera)){
             concatenacion(auxHilera,p,2);
         }else{
-            NodoDoble z;
-            char hijo1=' ',hijo2, padre1;
-            for(i=i+1;i<auxHilera.length();i++){
+            soloConcatenacion(auxHilera,p);
+        }
+    }
+    /*
+    Metodo encargado de procesar las hileras que solo son concatenadas o las que tienes 
+    concatenacion despues del parentesis.
+    */
+    public void soloConcatenacion(String auxHilera,NodoDoble p){
+        NodoDoble z,x,y;
+        int i;
+        char hijo1=' ',hijo2, padre,aux;
+        for(i=0;i<auxHilera.length();i++){
             aux=auxHilera.charAt(i);
             switch(aux){
                 case'+':
@@ -146,10 +154,10 @@ public class ArbolSintactico {
                     if((auxHilera.length()-i)==3|| auxHilera.length()==3){
                                     hijo1=aux;
                                     i++;
-                                    padre1=auxHilera.charAt(i);
+                                    padre=auxHilera.charAt(i);
                                     i++;
                                     hijo2=auxHilera.charAt(i);
-                                    x=new NodoDoble(padre1);
+                                    x=new NodoDoble(padre);
                                     y=new NodoDoble(hijo1);
                                     z=new NodoDoble(hijo2);
                                     x.setLd(y);
@@ -174,9 +182,8 @@ public class ArbolSintactico {
                             }
             
                         }
-                    }
-        
     }
+    
     /*
     Metodo utilizado para ver el recorido inOrden del arbol
     */
