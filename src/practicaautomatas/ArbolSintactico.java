@@ -33,7 +33,7 @@ public class ArbolSintactico {
         hijo=auxHilera.charAt(i);
         i++;
         padre=auxHilera.charAt(i);
-        NodoDoble x=new NodoDoble(padre);
+     s   NodoDoble x=new NodoDoble(padre);
         raiz=x;
         NodoDoble y=new NodoDoble(hijo);
         x.setLd(y);
@@ -977,8 +977,9 @@ public class ArbolSintactico {
                         i++;
                         aux=hilera.charAt(i);
                         if(aux=='.'){
-                            return false;
+                            condicion= false;
                         }
+                        i--;
                     }
                     break;
                 case'*':
@@ -986,8 +987,9 @@ public class ArbolSintactico {
                         i++;
                         aux=hilera.charAt(i);
                         if(aux=='.'){
-                            return false;
+                            condicion= false;
                         }
+                        i--;
                     }
                     break;
             
