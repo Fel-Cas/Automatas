@@ -13,17 +13,17 @@ import java.util.Stack;
  * @author andres
  */
 public class ArbolSintactico {
-     private NodoDoble raiz;
+    private NodoDoble raiz;
      /*
       Metodo constructor
       */
      public ArbolSintactico() {
     }
-    /*
+    /****
      Metodo encargado de inicialzar el arbol con el punto de cocatencion en la raiz y el 
-     simbolo de secuencia nula(#) como hijo derecho. Ademas es el encargado de verificar los casos
+     simbolo de fin de secuencia(#) como hijo derecho. Ademas es el encargado de verificar los casos
      del resto de la gramatica, si tiene union(|), cocatenacion(.) o solo parentesis.
-     */
+     ****/
     public void crearArbol(String hilera){
         String auxHilera=null;
         char padre,hijo,aux;
@@ -33,7 +33,7 @@ public class ArbolSintactico {
         hijo=auxHilera.charAt(i);
         i++;
         padre=auxHilera.charAt(i);
-     s   NodoDoble x=new NodoDoble(padre);
+        NodoDoble x=new NodoDoble(padre);
         raiz=x;
         NodoDoble y=new NodoDoble(hijo);
         x.setLd(y);
@@ -95,13 +95,13 @@ public class ArbolSintactico {
         }else if(tieneConcatenacion(hilera)){
             concatenacion(auxHilera,p,2);
         }else{
-            soloConcatenacion(auxHilera,p);
+            soloConcatenacion(auxHilera.substring(2,auxHilera.length()),p);
         }
     }
-    /*
-    Metodo encargado de procesar las hileras que solo son concatenadas o las que tienes 
+    /****
+    Metodo encargado de procesar las hileras que solo son concatenadas o las que tienen
     concatenacion despues del parentesis.
-    */
+    ****/
     public void soloConcatenacion(String auxHilera,NodoDoble p){
         NodoDoble z,x,y;
         int i;
@@ -184,9 +184,9 @@ public class ArbolSintactico {
                         }
     }
     
-    /*
-    Metodo utilizado para ver el recorido inOrden del arbol
-    */
+    /****
+    Metodo utilizado para ver el recorido inOrden del arbol.
+    ****/
     public String inOrden(NodoDoble r){        
        String hilera="";
         if(r!=null){
@@ -196,10 +196,10 @@ public class ArbolSintactico {
         }
        return hilera;        
     }
-    /*
-    Metodo que retorna verdadero o falso, dependiendo si el simbolo con mayor
-    pioridad es la union. Osea que si en una hilera o la otra
-    */
+    /****
+    Metodo que retorna verdadero o falso,  si el simbolo con mayor
+    pioridad es la union.
+    ****/
     public  boolean tieneUnion(String hilera){
         boolean condicion=false;
         int n=hilera.length(),i;
@@ -226,10 +226,10 @@ public class ArbolSintactico {
         }
         return condicion;
     }
-    /*
+    /****
     Metodo encargado de devolver la posicion donde se encuentra la union con 
-    mayor prioridad
-    */
+    mayor prioridad.
+    ****/
     public int posicionUnion(String hilera){
         int pos=0;
         int n=hilera.length(),i;
@@ -256,10 +256,10 @@ public class ArbolSintactico {
         }
         return pos;
     }
-    /*
+    /****
     Metodo que retorna verdadero o falso, dependiendo si el lenguaje entrado esta entre
     parentesis.
-    */
+    ****/
     public boolean soloParentesis(String hilera){
         boolean condicion=false;
         int contador=0;
@@ -323,11 +323,11 @@ public class ArbolSintactico {
         }
         return condicion;
     }
-    /*
+    /****
     Metodo encargado de separar en dos partes la hilera, una parte desde el inicio hasta 
-   una posicion antes de la union y otra una posicion despues hasta el final de la hilera.
+    una posicion antes de la union y otra una posicion despues, hasta el final de la hilera.
     pone a la union como padre y le da el trtamiento correspondiente a las otras dos hileras.
-    */
+    ****/
     public void dosHileras(NodoDoble padre,String auxHilera,int desicion){
         NodoDoble x,y,z,w,padreU,pad;
         int pos=posicionUnion(auxHilera);
@@ -559,9 +559,9 @@ public class ArbolSintactico {
                 
         }
     }
-    /*
-    Metodo encargado de tratar una parte de caracteres concatenados que aparecen dentro de un parentesis
-    */
+    /****
+    Metodo encargado de tratar una parte de caracteres concatenados que aparecen dentro de un parentesis.
+    ****/
     public void concatenacionDosHileras(int contador,NodoDoble padre, NodoDoble pad, String hilera2){
         char aux;
         NodoDoble x,y,z;
@@ -704,11 +704,11 @@ public class ArbolSintactico {
         }
         
     }
-    /*
+    /****
     Metodo encargado de separar en dos partes la hilera, una parte desde el inicio hasta 
-   una posicion antes de la concatenacion y otra una posicion despues hasta el final de la hilera.
+   una posicion antes de la concatenacion y otra una posicion despues, hasta el final de la hilera.
     pone a la concatenacion como padre y le da el trtamiento correspondiente a las otras dos hileras.
-    */
+    ****/
     public void concatenacion(String auxHilera,NodoDoble padre,int liga){
         NodoDoble x,y,z,padreC,pad;
         pad=padre;
@@ -940,10 +940,10 @@ public class ArbolSintactico {
             }
         }
     }
-     /*
+     /****
     Metodo que retorna verdadero o falso, dependiendo si el simbolo con mayor
-    pioridad es la concatenacion.
-    */
+    prioridad es la concatenacion.
+    ****/
     public boolean tieneConcatenacion(String hilera){
         int n= hilera.length();
         boolean condicion= false;
@@ -997,40 +997,47 @@ public class ArbolSintactico {
         }
         return condicion;
     }
-    /*
+    /****
     Metodo encargado de devolver la posicion donde se encuentra la concatenacion con 
-    mayor prioridad
-    */
+    mayor prioridad.
+    ****/
     public int posicionConcatenacion(String hilera){
         int pos=0;
         int n=hilera.length(),i;
         char aux;
         for(i=0;i<n;i++){
             aux=hilera.charAt(i);
-            if(aux==')'){
-                i+=1;
+            switch(aux){
+                case')':
+                    i+=1;
                 while(aux!='('){
                     aux=hilera.charAt(i);
                     i++;
                 }
                 i--;
-            }
-            if(aux=='('){
-                i+=1;
-                aux=hilera.charAt(i);
-                if(aux=='.'){
-                    pos=i;
-                    return i;
-                }
-            }
-            if(aux=='.'){
-                i++;
-                aux=hilera.charAt(i);
-                if(aux=='*'||aux=='+'){
-                    i--;
-                    pos=i;
-                    return i;
-                }
+                i--;
+                    break;
+                case '(':
+                    i+=1;
+                    aux=hilera.charAt(i);
+                    if(aux=='.'){
+                        pos=i;
+                        return i;
+                    }
+                    break;
+                case '.':
+                    i++;
+                    aux=hilera.charAt(i);
+                    if(aux=='*'||aux=='+'){
+                       if(i>2){
+                        i--;
+                        pos=i;
+                        return i;   
+                       }
+                        
+                    }
+                    break;
+                
             }
         }
         return pos;

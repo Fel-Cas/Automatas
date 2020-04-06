@@ -16,15 +16,15 @@ public class AutomataFD {
     private String lenguaje="";
     private Object[][]siguientes;
     private Object [][] transicion;
-    ArrayList <String> letras = new ArrayList();
+    private ArrayList <String> letras = new ArrayList();
     private Object [][] tabla;
     public AutomataFD() {
         
     }
-    /*
-       Este metodo es el encargado de encontrar las letras o numeros diferentes 
-        que se encontraron en la ER
-    */
+    /****
+       Este método es el encargado de encontrar las letras o números diferentes 
+        que se encontraron en la ER.
+    ****/
     public void encontrarLenguaje(NodoDoble r){
         Stack pila=new Stack();
         NodoDoble p;
@@ -36,10 +36,10 @@ public class AutomataFD {
             }
         }
     }
-    /*
-        Metodo encargado de poner verdadero el item de anulable a cada 
+    /****
+        Método encargado de poner verdadero el item de anulable a cada 
         nodo del arbol, si este es correcto.
-    */
+    ****/
     public void anulable(NodoDoble r){
         if(r!=null){
             anulable((NodoDoble)r.getLi());           
@@ -65,9 +65,9 @@ public class AutomataFD {
             
         }
     }
-    /*
-        Metodo encargado de enumerar de 1 hsta n las hojas del arbol.
-    */
+    /****
+        Metodo encargado de enumerar de 1 hasta n las hojas del árbol.
+    ****/
     public void enumerar(NodoDoble r){
         Stack pila=new Stack();
         String letra;
@@ -97,9 +97,9 @@ public class AutomataFD {
             System.out.print(p.getDato());
         }
     }
-    /*
-        Metodoe encargado de encontrar todos los nodos hoja del arbol y ponerlos en una pila
-    */
+    /****
+        Método encargado de encontrar todos los nodos hoja del árbol y ponerlos en una pila.
+    ****/
     public void nodosHoja(NodoDoble r,Stack pila){
        if(r!=null){
             nodosHoja((NodoDoble)r.getLi(),pila);
@@ -110,9 +110,9 @@ public class AutomataFD {
         }
         
     }
-    /*
-    Metodo encargado de encontrar Primera y Ultima Posicion de cada nodo del arbol
-    */
+    /****
+        Método encargado de encontrar Primera y Ultima Posicion de cada nodo del árbol.
+    ****/
     public void calcularPosiciones(NodoDoble r){
         if(r!=null){            
             calcularPosiciones(r.getLi());
@@ -146,9 +146,9 @@ public class AutomataFD {
             System.out.print(r.getDato());
         }
     }
-    /*
-        Metodo encargado crear la tabla de siguientes para crear el automata
-    */
+    /****
+        Método encargado crear la tabla de siguientes para crear el automata.
+    ****/
     public void follows(NodoDoble r){
          Stack pilaHojas=new Stack();
         Stack pila=new Stack();
@@ -173,34 +173,36 @@ public class AutomataFD {
         while(!pila.empty()){
             p=(NodoDoble)pila.pop();
             //System.out.println(p.getDato());
-            if(p.getDato()=='.'){
-                for(int j=0;j<n-1;j++){
-                 aux=(String )siguientes[j][0];
-                 if(p.getLd()!=null&&p.getLi()!=null){
-                     q=p.getLi();
-                     if(q.getUltimaPos().contains(aux)){
-                         siguientes[j][2]+=p.getLd().getPrimeraPos();
-                     }                    
-                 }
-                }
-            }else if(p.getDato()=='*'){
-                for(int j=0;j<n-1;j++){
-                    aux=(String)siguientes[j][0];
-                    if(p.getUltimaPos().contains(aux)){
-                        //System.out.println(p.getLi().getUltimaPos().indexOf(aux));
-                        siguientes[j][2]+=p.getPrimeraPos();
-                    }
-                }               
-            }else if(p.getDato()=='+'){
-                for(int j=0;j<n-1;j++){
-                    aux=(String)siguientes[j][0];
-                    if(p.getUltimaPos().contains(aux)){
-                        //System.out.println(p.getLi().getUltimaPos().indexOf(aux));
-                        siguientes[j][2]+=p.getPrimeraPos();
-                        System.out.println(p.getPrimeraPos() +" holaaaaaaaaaaaaa");
-                    }
-                }   
-            }          
+            switch (p.getDato()) {
+                 case '.':
+                     for(int j=0;j<n-1;j++){
+                         aux=(String )siguientes[j][0];
+                         if(p.getLd()!=null&&p.getLi()!=null){
+                             q=p.getLi();
+                             if(q.getUltimaPos().contains(aux)){
+                                 siguientes[j][2]+=p.getLd().getPrimeraPos();
+                             }
+                         }
+                     }    break;
+                 case '*':
+                     for(int j=0;j<n-1;j++){
+                         aux=(String)siguientes[j][0];
+                         if(p.getUltimaPos().contains(aux)){
+                             //System.out.println(p.getLi().getUltimaPos().indexOf(aux));
+                             siguientes[j][2]+=p.getPrimeraPos();
+                         }
+                     }    break;
+                 case '+':
+                     for(int j=0;j<n-1;j++){
+                         aux=(String)siguientes[j][0];
+                         if(p.getUltimaPos().contains(aux)){
+                             //System.out.println(p.getLi().getUltimaPos().indexOf(aux));
+                             siguientes[j][2]+=p.getPrimeraPos();
+                         }
+                     }    break; 
+                 default:
+                     break;
+             }          
         }
        
         for(int j=0;j<n;j++){            
@@ -210,15 +212,15 @@ public class AutomataFD {
             System.out.println("");
         }
     }
-    /*
-        Metodo encargado de construir los el AutomataFD a partir 
+    /****
+        Método encargado de construir los el AutomataFD a partir 
         de la tabla de siguientes.
-    */
+    ****/
     public void construirAutomata(NodoDoble r){
         ArrayList<String> estadosD = new ArrayList();
         int fila= 2;
         NodoDoble q;
-        String estadoTransicional = "", estado, estadoDeAceptacion, estados, estadoDeAceptacionLetra;
+        String estadoTransicional = "", estado, estadoDeAceptacion, estados, estadoDeAceptacionLetra, verificacion;
         Stack pilaHojas=new Stack();
         nodosHoja(r,pilaHojas);
         pilaHojas.pop(); //para quitar el #
@@ -269,17 +271,23 @@ public class AutomataFD {
                         estados= (String) siguientes[numeroEstado-1][2];
                     }                    
                     if(!estadoTransicional.equals(estados) && transicion[0][j]==siguientes[numeroEstado-1][1] && !estadoTransicional.contains(estados)){
-                        estadoTransicional += estados;
+                        for(h=0;h<estados.length();h++){
+                            verificacion = estados.substring(h,h+1);
+                            if(!estadoTransicional.contains(verificacion)){
+                                estadoTransicional += verificacion;
+                            }
+                        }
+                        //estadoTransicional += estados;
                     }                    
                     k++;
                 }
                 if(!estadosD.contains(estadoTransicional) && !"".equals(estadoTransicional)){                    
                     estadosD.add(estadoTransicional);
-                    transicion[fila][0]=estadoTransicional;
+                    transicion[fila][0]=estadoTransicional;                       
                     fila++;
                 }
                 if(!"".equals(estadoTransicional)){
-                    transicion[i+1][j]=estadoTransicional;
+                    transicion[i+1][j]=estadoTransicional;      
                 }
             }
         }     
@@ -298,100 +306,98 @@ public class AutomataFD {
                 h++;
             }                
         }        
-        
-         String estadoCambio="";
-        Object aux;
-        tabla=new Object[estadosD.size()+1][transicion[0].length];
-        for(int i=0;i<estadosD.size();i++){
-           estadoCambio=estadosD.get(i);
-            for(int n=0;n<transicion[0].length-1;n++){
-                for(int j=0;j<transicion.length;j++){
-                    if(transicion[j][n]!=null){
-                        aux=transicion[j][n];
-                        if(aux.equals(estadoCambio)){
-                        transicion[j][n]=Integer.toString(i+1);   
-                        }
-                    }else{
-                        transicion[j][n]="ERRO";
-                    }  
+        for(int i=0;i<=estadosD.size();i++){
+            for(int j=0;j<transicion[0].length;j++){
+                if(transicion[i][j]==null){
+                    transicion[i][j]="ERROR";
                 }
             }
         }
-         for(int i=0;i<=estadosD.size();i++){
-            for(int j=0;j<transicion[0].length;j++){
-                    tabla[i][j]=transicion[i][j];
-            }
-        }
-        
-         for(int i=0;i<tabla.length;i++){
+        tabla=new Object[estadosD.size()+1][transicion[0].length];
+        for(int i=0; i<tabla.length;i++){
             for(int j=0;j<tabla[0].length;j++){
-                System.out.print(tabla[i][j]+" "); 
+                tabla[i][j]=transicion[i][j];                
             }
-            System.out.println("");
         }
-        /*for(int i=0;i<=estadosD.size();i++){
-            for(int j=0;j<transicion[0].length;j++){
-                System.out.print(transicion[i][j]+" "); 
-            }
-            System.out.println("");
-        }*/
+        System.out.println("");
         for(int i=0;i<estadosD.size();i++){
             System.out.println(estadosD.get(i)+" = "+"estado "+(i+1));  
-        }
+        }        
     }
-    /*
-        Metodo encargado de renombrar cada uno de los estado del automata.
-    */    
-    public void construirEstados(Object [][] tablaDeTransiciones){ //Asignarle a cada estado un solo dígito, no funciona correctamente
-        int h;
-        for(int i=1;i<tablaDeTransiciones.length;i++){
-            for(int j=1;j<tablaDeTransiciones[0].length;j++){
-                h=1;
-                while(h<tablaDeTransiciones.length){
-                    if(tablaDeTransiciones[h][j]==tablaDeTransiciones[i][0] && tablaDeTransiciones[i][0]!=null && tablaDeTransiciones[h][j]!=null){
-                        tablaDeTransiciones[h][j]= i;
-                        System.out.println(i+" hola");
+    
+    /**
+     * Método que recibe una hilera de caracteres y verifica si es correcta.
+     **/
+    public String reconocerHilera(String hilera){
+        char recorreTransicion=' '/*, simbolo=""*/;
+        char simbolo=' ';
+        String respuesta;
+        int letra=0, i=1, j=1, aceptacion=1, contadorLetras=0;
+        String estadoColumna="", estadoFila="";
+        if(hilera.length()>0){
+            while(letra<hilera.length()){
+                simbolo=' ';
+                estadoColumna=""; estadoFila="";
+                recorreTransicion=hilera.charAt(letra);
+                while(j<tabla[0].length-1 && recorreTransicion!=simbolo){
+                    simbolo=(char) tabla[0][j];
+                    if(recorreTransicion==simbolo){
+                        contadorLetras++;
+                        estadoColumna =(String) tabla[aceptacion][j];
+                        if(estadoColumna.equals("ERROR")){
+                            return "Hilera "+hilera+" "+" no reconocida";
+                        }
                     }
-                    h++;
+                    j++;
                 }
+                //System.out.print(i+" "+estadoFila+" "+estadoColumna);
+                while(i<tabla.length && !estadoFila.equals(estadoColumna)){
+                    estadoFila = (String) tabla[i][0];
+                    if(estadoFila.equals(estadoColumna)){
+                        aceptacion=i;
+                    }
+                    i++;
+                }
+                letra++;
+                j=1; i=1;
             }
-        }
-    }    
-    /*
-        Metodo encargado de encontrar todos los nodos que contengan como dato a 
-    * o . y los guarda en un pila
-    */
+            if(contadorLetras==hilera.length()){
+                int aux =(int) tabla[aceptacion][tabla[0].length-1];
+                if(aux==1){
+                    respuesta= "Hilera "+hilera+" "+" reconocida";
+                    return respuesta;
+                }else{
+                    respuesta = "Hilera "+hilera+" "+" no reconocida";
+                    return respuesta;
+                }                
+            }else{
+                respuesta = "Hilera "+hilera+" "+" no reconocida";
+                return respuesta;
+            }
+        }else{
+            int aux =(int) tabla[aceptacion][tabla[0].length-1];
+            if(aux==1){
+                respuesta = "Hilera "+hilera+" "+" reconocida";
+                return respuesta;
+            }else{
+                respuesta = "Hilera "+hilera+" "+" no reconocida";
+                return respuesta;
+            }                
+        }            
+    }
+    /****
+        Método encargado de encontrar todos los nodos que contengan como dato a 
+    *, . y +, los cuales son guardados en una pila.
+    ****/
     public void nodos(NodoDoble r,Stack pila){
         if(r!=null){
             nodos(r.getLi(),pila);
-            if(r.getDato()=='.'||r.getDato()=='*'){
+            if(r.getDato()=='.'||r.getDato()=='*' || r.getDato()=='+'){
                 pila.push(r);
             }
             nodos(r.getLd(),pila);
         }
     }
-
-//    public String ancestros(NodoDoble p){
-//        //Object p,q;
-//        String hilera="";
-//        Stack pila =new Stack();
-//        
-//        p=this.padreBinario(raiz, d);
-//        if(p!=null){  
-//            pila.push(p);
-//            while(p!=null){
-//                p=this.padreBinario(raiz, p);
-//                if(p!=null){
-//                pila.push(p);
-//                }
-//            }
-//            while(!pila.isEmpty()){
-//                q=(Object)pila.pop();
-//                hilera=hilera+q;
-//            }        
-//        }
-//        return hilera+d;
-//    }
     
     public String getLenguaje() {
         return lenguaje;
@@ -416,4 +422,22 @@ public class AutomataFD {
     public void setTransicion(Object[][] transicion) {
         this.transicion = transicion;
     }
+
+    public ArrayList <String> getLetras() {
+        return letras;
+    }
+
+    public void setLetras(ArrayList <String> letras) {
+        this.letras = letras;
+    }
+
+    public Object[][] getTabla() {
+        return tabla;
+    }
+
+    public void setTabla(Object[][] tabla) {
+        this.tabla = tabla;
+    }
+    
+    
 }

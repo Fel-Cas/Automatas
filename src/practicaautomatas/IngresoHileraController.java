@@ -14,15 +14,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author jhon.quitian
  */
 public class IngresoHileraController {
-    //Varibles Utilizadas en  la entrada de la Expresion Regular
+     //Varibles Utilizadas en  la entrada de la Expresion Regular
     @FXML
     private Label escribirHilera;
     @FXML
@@ -41,10 +46,18 @@ public class IngresoHileraController {
     private TextField hileraAReconocer;
     @FXML
     private Button mostrarAutomata,reconocerHilera;
+    @FXML
+    TextArea tabla; 
+    @FXML
     static AutomataFD automata;
+    @FXML
     static ArbolSintactico arbol;
     //Metodos de entrada de la Expresion Regular
     @FXML
+    /****
+    Metodo encargado de abrir la ventana donde se va ingresar la expresion regular y controla
+    que solo se entren letras.
+    ****/
     private void IngresarHileraLetras(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("IngresoHilera.fxml"));
         j=1;
@@ -57,6 +70,10 @@ public class IngresoHileraController {
         Stage stage =(Stage) soloNumeros.getScene().getWindow();
         stage.hide();
     }
+    /****
+    Metodo encargado de abrir la ventana donde se va ingresar la expresion regular y controlar
+    que solo se entren numeros.
+    ****/
     @FXML
     private void IngresarHileraNumeros(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("IngresoHilera.fxml"));
@@ -70,6 +87,9 @@ public class IngresoHileraController {
         Stage stage =(Stage) soloLetras.getScene().getWindow();
         stage.hide();
     }
+    /****
+    Metodo encargado de agregar la letra deseada a la expresion regular.
+    ****/
     public void aceptarAction (ActionEvent event){
         cadena+=hilera.getText();
         escribirHilera.setText(cadena);
@@ -86,6 +106,10 @@ public class IngresoHileraController {
            cierraParentesis.setDisable(false);
         }
     }
+    /****
+    Metodo encargado de controlar que se entren los caracteres correctos en el campo de texto y
+    unicamente uno.
+    ****/
     public void  hilera (javafx.scene.input.KeyEvent keyEvent) {
         char car = keyEvent.getCharacter().charAt(0);
         
@@ -120,6 +144,9 @@ public class IngresoHileraController {
             
          
     }
+    /****
+    Metodo encargado de poner en la expresion regular un abre parentesis.
+    ****/
     public void abreParentesisAction(ActionEvent event){
         cadena+= "(";
         escribirHilera.setText(cadena);
@@ -134,6 +161,9 @@ public class IngresoHileraController {
         contadorParentesis+= 1;        
         aceptar.setDisable(false);
     }
+    /****
+    Metodo encargado de poner en la expresion regular un cierra parentesis.
+    ****/
     public void cierraParentesisAction(ActionEvent event){
         cadena+=")";
         escribirHilera.setText(cadena);                
@@ -146,6 +176,9 @@ public class IngresoHileraController {
         abreParentesis.setDisable(true);
         cierraParentesis.setDisable(true);
     }
+    /****
+    Metodo encargado de poner en la expresion regular la subhilera nula(*).
+    ****/
     public void hileraNulaAction(ActionEvent event){
         cadena+="*";
         escribirHilera.setText(cadena);
@@ -156,6 +189,9 @@ public class IngresoHileraController {
         hileraNula.setDisable(true);
         hileraNoNula.setDisable(true);
     }
+    /***
+    Metodo encargado de poner en la expresion regular la subhilera no-nula(+).
+    **/
     public void hileraNoNulaAction(ActionEvent event){
         cadena+="+";
         escribirHilera.setText(cadena);
@@ -166,6 +202,9 @@ public class IngresoHileraController {
         hileraNoNula.setDisable(true);
         finSecuencia.setDisable(true);
     }
+    /****
+    Metodo encargado de poner en la expresion regular la concatenacion(.).
+    ****/
     public void concatenarAction(ActionEvent event){
         cadena+=".";
         escribirHilera.setText(cadena);
@@ -183,6 +222,9 @@ public class IngresoHileraController {
         concatenar.setDisable(true);
         union.setDisable(true);        
     }
+    /****
+    Metodo encargado de poner en la expresion regular la union(|).
+    ****/
     public void unionAction(ActionEvent event){
         cadena+="|";
         escribirHilera.setText(cadena);        
@@ -196,6 +238,10 @@ public class IngresoHileraController {
         union.setDisable(true);
         finSecuencia.setDisable(true);
     }
+    /****
+    Metodo encargado de poner en la expresion regular el fin de secuencia(#) y abrir 
+    otra pestaña donde se mostrara el automata.
+    ****/
     public void finSecuenciaAction(ActionEvent event) throws IOException{
         cadena+="#";
         escribirHilera.setText(cadena);
@@ -210,13 +256,49 @@ public class IngresoHileraController {
          stage.hide();
     }    
     //Metodos Utilizados para el reconocimiento de la hilera
+    /****
+    Metodo encargado de extraer una hilera de caracteres y verificar que si es aprobada por el automata o no.
+    ****/
     public void reconocerHileraAction(ActionEvent event){
+        String reconoce= hileraAReconocer.getText();
         System.out.println(hileraAReconocer.getText());
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Reconocimiento de hilera");
+        alert.setHeaderText(automata.reconocerHilera(reconoce));
+        alert.showAndWait();
         hileraAReconocer.setText(" ");
     }
+    /****
+    Metodo encargado de tomar la expresion regular procesarla y mostrar el automata resultante.
+    ****/
     public void mostrarAutomataAction(ActionEvent event){
+        mostrarAutomata.setDisable(true);
         reconocerHilera.setDisable(false);
+        arbol= new ArbolSintactico();
+        automata=new AutomataFD();
+        arbol.crearArbol(cadena);
+        automata.enumerar(arbol.getRaiz());
+        automata.anulable(arbol.getRaiz());
+        automata.calcularPosiciones(arbol.getRaiz());
+        automata.follows(arbol.getRaiz());
+        System.out.println(arbol.getRaiz().getPrimeraPos());
+        automata.construirAutomata(arbol.getRaiz());
+        Object[][] tablaAutomata=automata.getTabla();
+        
+        for(int i=0;i<tablaAutomata.length;i++){
+            for(int k=0;k<tablaAutomata[0].length;k++){
+                tabla.appendText(tablaAutomata[i][k].toString()+"           ");   
+            }
+            tabla.appendText("\n");
+             
+        }
+        tabla.setEditable(false);
+        
+        
     }
+    /****
+    Metodo encargado de verificar que se entren datos correctos para la hilera a reconocer.
+    ****/
     public void  hileraReconocer (javafx.scene.input.KeyEvent keyEvent) {
         char car = keyEvent.getCharacter().charAt(0);
         
